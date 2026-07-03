@@ -16,6 +16,7 @@ export default function RegisterPage() {
     e.preventDefault();
     clearError();
     const success = await register(email, password, name);
+    console.log('Register result', success);
     if (success) {
       router.push('/dashboard');
     }

@@ -24,9 +24,11 @@ export const useAuthStore = create<AuthState>((set) => ({
   error: null,
 
   login: async (email: string, password: string) => {
+    console.log('Auth: login start', email);
     set({ isLoading: true, error: null });
     try {
       const res = await api.post<AuthResponse>('/auth/login', { email, password });
+      console.log('Auth: login response', res);
       if (res.success && res.data) {
         setTokens(res.data.accessToken, res.data.refreshToken);
         set({ user: res.data.user, isAuthenticated: true, isLoading: false });
@@ -35,8 +37,9 @@ export const useAuthStore = create<AuthState>((set) => ({
         set({ error: res.error?.message || 'Login failed', isLoading: false });
         return false;
       }
-    } catch {
-      set({ error: 'Network error', isLoading: false });
+    } catch (e: any) {
+      console.error('Auth: login error', e);
+      set({ error: e.message || 'Network error', isLoading: false });
       return false;
     }
   },
@@ -53,8 +56,8 @@ export const useAuthStore = create<AuthState>((set) => ({
         set({ error: res.error?.message || 'Registration failed', isLoading: false });
         return false;
       }
-    } catch {
-      set({ error: 'Network error', isLoading: false });
+    } catch (e: any) {
+      set({ error: e.message || 'Network error', isLoading: false });
       return false;
     }
   },

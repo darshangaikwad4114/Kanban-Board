@@ -18,6 +18,7 @@ export default function LoginPage() {
     if (success) {
       router.push('/dashboard');
     }
+    // If login failed, error is already in the store and shown
   };
 
   return (
