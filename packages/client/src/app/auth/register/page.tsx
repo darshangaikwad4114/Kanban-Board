@@ -1,9 +1,10 @@
 'use client';
 
-import { useState, FormEvent } from 'react';
+import { useRef, useState, FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useAuthStore } from '@/store/authStore';
+import { useErrorReveal } from '@/hooks/animations/useErrorReveal';
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -11,16 +12,24 @@ export default function RegisterPage() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const errorRef = useRef<HTMLDivElement>(null);
+
+  useErrorReveal(errorRef, error);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     clearError();
     const success = await register(email, password, name);
-    console.log('Register result', success);
     if (success) {
       router.push('/dashboard');
     }
   };
+
+  const debugAuth = useAuthStore((s) => ({
+    isAuthenticated: s.isAuthenticated,
+    isLoading: s.isLoading,
+    userEmail: s.user?.email,
+  }));
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
@@ -30,9 +39,19 @@ export default function RegisterPage() {
           <p className="text-gray-500 mt-2">Create your account</p>
         </div>
 
+        <div className="mb-4 text-xs text-gray-700 bg-gray-100 p-2 rounded">
+          <div>Auth state: {debugAuth.isAuthenticated ? 'authenticated' : 'not authenticated'}</div>
+          <div>Loading: {String(debugAuth.isLoading)}</div>
+          <div>User: {debugAuth.userEmail || 'none'}</div>
+        </div>
+
         <form onSubmit={handleSubmit} className="space-y-4">
           {error && (
-            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
+            <div
+              ref={errorRef}
+              role="alert"
+              className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm"
+            >
               {error}
             </div>
           )}

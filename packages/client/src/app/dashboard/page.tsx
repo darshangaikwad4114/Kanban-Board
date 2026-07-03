@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/store/authStore';
 import { api } from '@/lib/api';
 import type { Board } from '@kanban/shared';
+import { AnimatedPanel } from '@/components/ui/AnimatedPanel';
+import { DashboardSkeleton, PageSpinner } from '@/components/ui/Skeleton';
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -57,10 +59,31 @@ export default function DashboardPage() {
     router.push('/auth/login');
   };
 
+  const debugAuth = useAuthStore((s) => ({
+    isAuthenticated: s.isAuthenticated,
+    isLoading: s.isLoading,
+    userEmail: s.user?.email,
+  }));
+
   if (isLoading) {
+    return <PageSpinner />;
+  }
+
+  if (!isAuthenticated) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600" />
+        <div className="card p-6 max-w-md text-center">
+          <h2 className="text-xl font-semibold mb-2">Not signed in</h2>
+          <p className="text-sm text-gray-500 mb-4">Auth state says not authenticated.</p>
+          <div className="text-xs text-gray-500 mb-4">
+            <div>Auth state: {debugAuth.isAuthenticated ? 'authenticated' : 'not authenticated'}</div>
+            <div>Loading: {String(debugAuth.isLoading)}</div>
+            <div>User: {debugAuth.userEmail || 'none'}</div>
+          </div>
+          <button onClick={() => router.push('/auth/login')} className="btn-primary w-full">
+            Go to login
+          </button>
+        </div>
       </div>
     );
   }
@@ -89,8 +112,8 @@ export default function DashboardPage() {
           </button>
         </div>
 
-        {showCreate && (
-          <div className="card p-4 mb-6">
+        <AnimatedPanel show={showCreate} className="mb-6">
+          <div className="card p-4">
             <div className="flex gap-3">
               <input
                 type="text"
@@ -101,20 +124,28 @@ export default function DashboardPage() {
                 autoFocus
                 onKeyDown={(e) => e.key === 'Enter' && handleCreateBoard()}
               />
-              <button onClick={handleCreateBoard} disabled={isCreating || !newBoardTitle.trim()} className="btn-primary">
+              <button
+                onClick={handleCreateBoard}
+                disabled={isCreating || !newBoardTitle.trim()}
+                className="btn-primary"
+              >
                 {isCreating ? 'Creating...' : 'Create'}
               </button>
-              <button onClick={() => { setShowCreate(false); setNewBoardTitle(''); }} className="btn-secondary">
+              <button
+                onClick={() => {
+                  setShowCreate(false);
+                  setNewBoardTitle('');
+                }}
+                className="btn-secondary"
+              >
                 Cancel
               </button>
             </div>
           </div>
-        )}
+        </AnimatedPanel>
 
         {isLoadingBoards ? (
-          <div className="flex items-center justify-center py-12">
-            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary-600" />
-          </div>
+          <DashboardSkeleton />
         ) : boards.length === 0 ? (
           <div className="text-center py-12">
             <p className="text-gray-500">No boards yet. Create your first board!</p>
