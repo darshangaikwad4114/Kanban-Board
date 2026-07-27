@@ -5,7 +5,7 @@
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
-    "build": "tsc",
+    "build": "npm run build --workspace=@kanban/shared && npm run build --workspace=@kanban/server && npm run build --workspace=@kanban/client",
     "typecheck": "tsc --noEmit",
     "dev": "tsc --watch"
   },
