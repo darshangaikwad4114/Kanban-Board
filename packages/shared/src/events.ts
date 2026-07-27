@@ -17,6 +17,7 @@ export enum ServerEvent {
   CARD_CHANGED = 'card:changed',
   CARD_DELETED = 'card:deleted',
   LIST_CHANGED = 'list:changed',
+  LIST_DELETED = 'list:deleted',
   BOARD_UPDATED = 'board:updated',
   ACTIVITY_LOG = 'activity:log',
   USER_TYPING = 'user:typing',
@@ -50,6 +51,9 @@ export interface CardChangedPayload {
     position?: number;
     listId?: string;
     assigneeId?: string | null;
+    priority?: 'none' | 'low' | 'medium' | 'high';
+    dueDate?: string | null;
+    label?: string | null;
   };
   updatedAt: string;
   updatedBy: string;
@@ -68,6 +72,11 @@ export interface ListChangedPayload {
     title?: string;
     position?: number;
   };
+}
+
+export interface ListDeletedPayload {
+  listId: string;
+  boardId: string;
 }
 
 export interface BoardUpdatedPayload {
@@ -100,6 +109,7 @@ export interface ConnectionAckPayload {
   userId: string;
   boardId: string;
   connectedAt: string;
+  presence: PresenceState[];
 }
 
 export interface ServerErrorPayload {

@@ -1,10 +1,28 @@
 'use client';
 
 import { create } from 'zustand';
-import type { Board, List, Card, ActivityLog, ConnectionStatus, PresenceState } from '@kanban/shared';
+import type {
+  Board,
+  List,
+  Card,
+  ActivityLog,
+  ConnectionStatus,
+  PresenceState,
+  UserJoinedPayload,
+  UserLeftPayload,
+  CardChangedPayload,
+  CardDeletedPayload,
+  ListChangedPayload,
+  ListDeletedPayload,
+  BoardUpdatedPayload,
+  ActivityLogPayload,
+  ConnectionAckPayload,
+} from '@kanban/shared';
 import { api } from '../lib/api';
 import { connectSocket, getSocket, disconnectSocket, onConnectionStatusChange } from '../lib/socket';
 import { ClientEvent, ServerEvent } from '@kanban/shared';
+
+let socketListenersRegistered = false;
 
 interface BoardState {
   // Board data
@@ -79,75 +97,100 @@ export const useBoardStore = create<BoardState>((set, get) => ({
     const socket = connectSocket();
     socket.emit(ClientEvent.JOIN_BOARD, { boardId });
 
-    // Listen for socket events
-    socket.on(ServerEvent.CONNECTION_ACK, (data: any) => {
-      set({ isSocketConnected: true, connectionStatus: 'connected', presence: data.presence || [] });
-    });
+    // Register socket event listeners only once to prevent stacking
+    if (!socketListenersRegistered) {
+      socketListenersRegistered = true;
 
-    socket.on(ServerEvent.USER_JOINED, (data: any) => {
-      set((state) => ({
-        presence: [
-          ...state.presence.filter((p) => p.userId !== data.userId),
-          { userId: data.userId, userName: data.userName, joinedAt: data.timestamp, isActive: true },
-        ],
-      }));
-    });
+      socket.on(ServerEvent.CONNECTION_ACK, (data: ConnectionAckPayload) => {
+        set({ isSocketConnected: true, connectionStatus: 'connected', presence: data.presence || [] });
+      });
 
-    socket.on(ServerEvent.USER_LEFT, (data: any) => {
-      set((state) => ({
-        presence: state.presence.filter((p) => p.userId !== data.userId),
-      }));
-    });
+      socket.on(ServerEvent.USER_JOINED, (data: UserJoinedPayload) => {
+        set((state) => ({
+          presence: [
+            ...state.presence.filter((p) => p.userId !== data.userId),
+            { userId: data.userId, userName: data.userName, joinedAt: data.timestamp, isActive: true },
+          ],
+        }));
+      });
 
-    socket.on(ServerEvent.CARD_CHANGED, (data: any) => {
-      set((state) => ({
-        cards: state.cards.map((c) =>
-          c._id === data.cardId ? { ...c, ...data.changes, updatedAt: data.updatedAt } : c
-        ),
-      }));
-    });
+      socket.on(ServerEvent.USER_LEFT, (data: UserLeftPayload) => {
+        set((state) => ({
+          presence: state.presence.filter((p) => p.userId !== data.userId),
+        }));
+      });
 
-    socket.on(ServerEvent.CARD_DELETED, (data: any) => {
-      set((state) => ({
-        cards: state.cards.filter((c) => c._id !== data.cardId),
-      }));
-    });
+      socket.on(ServerEvent.CARD_CHANGED, (data: CardChangedPayload) => {
+        set((state) => ({
+          cards: state.cards.map((c) =>
+            c._id === data.cardId ? { ...c, ...data.changes, updatedAt: data.updatedAt } : c
+          ),
+        }));
+      });
 
-    socket.on(ServerEvent.ACTIVITY_LOG, (data: any) => {
-      set((state) => ({
-        activityLogs: [
-          {
-            _id: data._id || Date.now().toString(),
-            boardId: data.boardId,
-            userId: data.userId,
-            userName: data.userName,
-            action: data.action,
-            entityType: data.entityType,
-            entityId: data.entityId,
-            details: data.details,
-            createdAt: data.timestamp,
-          },
-          ...state.activityLogs.slice(0, 49),
-        ],
-      }));
-    });
+      socket.on(ServerEvent.CARD_DELETED, (data: CardDeletedPayload) => {
+        set((state) => ({
+          cards: state.cards.filter((c) => c._id !== data.cardId),
+        }));
+      });
 
-    // Track connection status
-    const unsub = onConnectionStatusChange((status) => {
-      set({ connectionStatus: status, isSocketConnected: status === 'connected' });
-      if (status === 'connected') {
-        // Re-join board on reconnect
-        const state = get();
-        if (state.currentBoard) {
-          socket.emit(ClientEvent.JOIN_BOARD, { boardId: state.currentBoard._id });
-          // Full re-sync via REST
-          get().loadBoard(state.currentBoard._id);
+      socket.on(ServerEvent.LIST_CHANGED, (data: ListChangedPayload) => {
+        set((state) => ({
+          lists: state.lists.map((l) =>
+            l._id === data.listId ? { ...l, ...data.changes } : l
+          ),
+        }));
+      });
+
+      socket.on(ServerEvent.LIST_DELETED, (data: ListDeletedPayload) => {
+        set((state) => ({
+          lists: state.lists.filter((l) => l._id !== data.listId),
+          cards: state.cards.filter((c) => c.listId !== data.listId),
+        }));
+      });
+
+      socket.on(ServerEvent.BOARD_UPDATED, (data: BoardUpdatedPayload) => {
+        set((state) => ({
+          currentBoard: state.currentBoard ? { ...state.currentBoard, ...data.changes } : state.currentBoard,
+        }));
+      });
+
+      socket.on(ServerEvent.ACTIVITY_LOG, (data: ActivityLogPayload) => {
+        set((state) => ({
+          activityLogs: [
+            {
+              _id: Date.now().toString(),
+              boardId: data.boardId,
+              userId: data.userId,
+              userName: data.userName,
+              action: data.action,
+              entityType: data.entityType,
+              entityId: data.entityId,
+              details: data.details,
+              createdAt: data.timestamp,
+            },
+            ...state.activityLogs.slice(0, 49),
+          ],
+        }));
+      });
+
+      // Track connection status
+      const unsub = onConnectionStatusChange((status) => {
+        set({ connectionStatus: status, isSocketConnected: status === 'connected' });
+        if (status === 'connected') {
+          // Re-join board on reconnect
+          const state = get();
+          if (state.currentBoard) {
+            socket.emit(ClientEvent.JOIN_BOARD, { boardId: state.currentBoard._id });
+            // Full re-sync via REST
+            get().loadBoard(state.currentBoard._id);
+          }
         }
-      }
-    });
+      });
 
-    // Store unsub for cleanup on leave
-    (socket as any)._connectionStatusUnsub = unsub;
+      // Store unsub for cleanup on leave
+      (socket as any)._connectionStatusUnsub = unsub;
+    }
   },
 
   leaveBoard: () => {
@@ -159,6 +202,9 @@ export const useBoardStore = create<BoardState>((set, get) => ({
       }
       socket.off(ServerEvent.CARD_CHANGED);
       socket.off(ServerEvent.CARD_DELETED);
+      socket.off(ServerEvent.LIST_CHANGED);
+      socket.off(ServerEvent.LIST_DELETED);
+      socket.off(ServerEvent.BOARD_UPDATED);
       socket.off(ServerEvent.USER_JOINED);
       socket.off(ServerEvent.USER_LEFT);
       socket.off(ServerEvent.CONNECTION_ACK);

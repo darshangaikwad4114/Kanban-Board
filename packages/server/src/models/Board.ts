@@ -2,6 +2,9 @@ import mongoose, { Document, Schema } from 'mongoose';
 
 export interface IBoard extends Document {
   title: string;
+  description?: string;
+  color?: string;
+  templateId?: string;
   ownerId: mongoose.Types.ObjectId;
   memberIds: mongoose.Types.ObjectId[];
   createdAt: Date;
@@ -15,6 +18,23 @@ const boardSchema = new Schema<IBoard>(
       required: true,
       trim: true,
       maxlength: 200,
+    },
+    description: {
+      type: String,
+      trim: true,
+      maxlength: 500,
+      default: '',
+    },
+    color: {
+      type: String,
+      trim: true,
+      maxlength: 20,
+      default: 'lavender',
+    },
+    templateId: {
+      type: String,
+      trim: true,
+      maxlength: 50,
     },
     ownerId: {
       type: Schema.Types.ObjectId,

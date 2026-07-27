@@ -110,9 +110,21 @@ export const refresh = async (
       throw new AppError('Refresh token is required', 400, 'MISSING_REFRESH_TOKEN');
     }
 
-    const decoded = jwt.verify(refreshToken, env.JWT_REFRESH_SECRET) as TokenPayload;
+    let decoded: TokenPayload;
+    try {
+      decoded = jwt.verify(refreshToken, env.JWT_REFRESH_SECRET) as TokenPayload;
+    } catch {
+      next(new AppError('Invalid or expired refresh token', 401, 'INVALID_REFRESH_TOKEN'));
+      return;
+    }
+
     const user = await User.findById(decoded.userId).select('+refreshToken');
     if (!user || user.refreshToken !== refreshToken) {
+      // Clear the invalid refresh token from database if user exists but token doesn't match
+      if (user) {
+        user.refreshToken = undefined;
+        await user.save({ validateBeforeSave: false });
+      }
       throw new AppError('Invalid refresh token', 401, 'INVALID_REFRESH_TOKEN');
     }
 
@@ -136,10 +148,6 @@ export const refresh = async (
       },
     });
   } catch (error) {
-    if (error instanceof jwt.JsonWebTokenError) {
-      next(new AppError('Invalid refresh token', 401, 'INVALID_REFRESH_TOKEN'));
-      return;
-    }
     next(error);
   }
 };
@@ -152,8 +160,13 @@ export const logout = async (
   try {
     const { refreshToken } = req.body;
     if (refreshToken) {
-      const decoded = jwt.verify(refreshToken, env.JWT_REFRESH_SECRET) as TokenPayload;
-      await User.findByIdAndUpdate(decoded.userId, { $unset: { refreshToken: 1 } });
+      try {
+        const decoded = jwt.verify(refreshToken, env.JWT_REFRESH_SECRET) as TokenPayload;
+        await User.findByIdAndUpdate(decoded.userId, { $unset: { refreshToken: 1 } });
+      } catch (jwtError) {
+        // If refresh token is invalid, still allow logout to succeed
+        // The client will clear their tokens anyway
+      }
     }
     res.status(200).json({ success: true, data: { message: 'Logged out successfully' } });
   } catch (error) {

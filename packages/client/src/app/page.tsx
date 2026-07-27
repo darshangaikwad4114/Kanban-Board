@@ -23,8 +23,13 @@ export default function Home() {
   }, [isAuthenticated, isLoading, router]);
 
   return (
-    <div className="flex items-center justify-center min-h-screen">
-      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600" />
+    <div className="flex items-center justify-center min-h-screen bg-surface">
+      <div className="flex flex-col items-center gap-4">
+        <div className="w-10 h-10 rounded-2xl bg-accent-soft flex items-center justify-center">
+          <div className="w-5 h-5 border-2 border-accent border-t-transparent rounded-full animate-spin" />
+        </div>
+        <p className="text-sm text-ink-muted">Loading…</p>
+      </div>
     </div>
   );
 }

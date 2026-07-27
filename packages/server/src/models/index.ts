@@ -1,5 +1,10 @@
-export { User, IUser } from './User';
-export { Board, IBoard } from './Board';
-export { List, IList } from './List';
-export { Card, ICard } from './Card';
-export { ActivityLog, IActivityLog } from './ActivityLog';
+export { User } from './User';
+export type { IUser } from './User';
+export { Board } from './Board';
+export type { IBoard } from './Board';
+export { List } from './List';
+export type { IList } from './List';
+export { Card } from './Card';
+export type { ICard } from './Card';
+export { ActivityLog } from './ActivityLog';
+export type { IActivityLog } from './ActivityLog';

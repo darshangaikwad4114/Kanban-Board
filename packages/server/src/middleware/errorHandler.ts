@@ -21,7 +21,11 @@ export const errorHandler = (
   res: Response,
   _next: NextFunction
 ): void => {
-  console.error('Error:', err);
+  // Don't log expected authentication failures (they're not real errors)
+  const quietCodes = ['INVALID_REFRESH_TOKEN', 'TOKEN_EXPIRED', 'INVALID_TOKEN', 'UNAUTHORIZED'];
+  if (!(err instanceof AppError && quietCodes.includes(err.code))) {
+    console.error('Error:', err);
+  }
 
   if (err instanceof AppError) {
     res.status(err.status).json({

@@ -18,6 +18,12 @@ interface PresenceEntry {
 }
 const boardPresence = new Map<string, Map<string, PresenceEntry>>();
 
+let ioInstance: Server | undefined;
+
+// Accessor used by controllers to broadcast changes without creating a
+// circular import with index.ts (which wires up routes -> controllers).
+export const getIO = (): Server | undefined => ioInstance;
+
 export const setupSocket = (httpServer: HttpServer): Server => {
   const io = new Server(httpServer, {
     cors: {
@@ -114,6 +120,7 @@ export const setupSocket = (httpServer: HttpServer): Server => {
     });
   });
 
+  ioInstance = io;
   return io;
 };
 

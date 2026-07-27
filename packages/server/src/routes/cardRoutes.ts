@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { createCard, updateCard, deleteCard, moveCard } from '../controllers/cardController';
 import { authenticate } from '../middleware/auth';
 import { validate } from '../middleware/validate';
-import { createCardSchema, updateCardSchema } from '@kanban/shared';
+import { createCardSchema, updateCardSchema, moveCardSchema } from '@kanban/shared';
 import rateLimit from 'express-rate-limit';
 
 const router = Router();
@@ -18,7 +18,7 @@ router.use(cardLimiter);
 
 router.post('/', validate(createCardSchema), createCard);
 router.patch('/:id', validate(updateCardSchema), updateCard);
-router.post('/:id/move', moveCard);
+router.post('/:id/move', validate(moveCardSchema), moveCard);
 router.delete('/:id', deleteCard);
 
 export default router;

@@ -7,6 +7,9 @@ export interface ICard extends Document {
   description: string;
   position: number;
   assigneeId?: mongoose.Types.ObjectId | null;
+  priority: 'none' | 'low' | 'medium' | 'high';
+  dueDate?: Date | null;
+  label?: string | null;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -42,6 +45,21 @@ const cardSchema = new Schema<ICard>(
     assigneeId: {
       type: Schema.Types.ObjectId,
       ref: 'User',
+      default: null,
+    },
+    priority: {
+      type: String,
+      enum: ['none', 'low', 'medium', 'high'],
+      default: 'none',
+    },
+    dueDate: {
+      type: Date,
+      default: null,
+    },
+    label: {
+      type: String,
+      trim: true,
+      maxlength: 50,
       default: null,
     },
   },
