@@ -1,6 +1,7 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
+    "preserveSymlinks": true,
     "outDir": "./dist",
     "rootDir": "./src",
     "module": "ESNext",
