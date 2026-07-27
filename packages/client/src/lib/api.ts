@@ -4,9 +4,9 @@ const API_BASE = '/api';
 
 let accessToken: string | null = null;
 let refreshToken: string | null = null;
+let isRefreshing = false;
+let refreshQueue: Array<{ resolve: (value: boolean) => void }> = [];
 
-// For server-side cookie storage in production, use httpOnly cookies.
-// For simplicity in this dev setup, we use localStorage.
 export const setTokens = (access: string, refresh: string) => {
   accessToken = access;
   refreshToken = refresh;
@@ -36,19 +36,42 @@ export const getAccessToken = () => accessToken;
 
 async function refreshAccessToken(): Promise<boolean> {
   if (!refreshToken) return false;
+  
+  // If a refresh is already in progress, queue up and wait for it
+  if (isRefreshing) {
+    return new Promise<boolean>((resolve) => {
+      refreshQueue.push({ resolve });
+    });
+  }
+  
+  isRefreshing = true;
   try {
     const res = await fetch(`${API_BASE}/auth/refresh`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ refreshToken }),
     });
-    if (!res.ok) return false;
+    if (!res.ok) {
+      clearTokens();
+      resolveQueue(false);
+      return false;
+    }
     const data = await res.json();
     setTokens(data.data.accessToken, data.data.refreshToken);
+    resolveQueue(true);
     return true;
   } catch {
+    clearTokens();
+    resolveQueue(false);
     return false;
+  } finally {
+    isRefreshing = false;
   }
+}
+
+function resolveQueue(success: boolean) {
+  refreshQueue.forEach(({ resolve }) => resolve(success));
+  refreshQueue = [];
 }
 
 export async function apiRequest<T>(
@@ -64,9 +87,16 @@ export async function apiRequest<T>(
     headers['Authorization'] = `Bearer ${accessToken}`;
   }
 
-  let res = await fetch(`${API_BASE}${endpoint}`, { ...options, headers });
+  const url = `${API_BASE}${endpoint}`;
 
-  // If 401, try refreshing token
+  let res;
+  try {
+    res = await fetch(url, { ...options, headers });
+  } catch (err: any) {
+    console.error('[apiRequest] fetch failed', err);
+    return { success: false, error: { message: err.message || 'Network error', code: 'FETCH_FAILED', status: 0 } };
+  }
+
   if (res.status === 401 && refreshToken) {
     const refreshed = await refreshAccessToken();
     if (refreshed) {
@@ -85,7 +115,6 @@ export async function apiRequest<T>(
   return data;
 }
 
-// Convenience methods
 export const api = {
   get: <T>(endpoint: string) => apiRequest<T>(endpoint),
   post: <T>(endpoint: string, body?: unknown) =>
