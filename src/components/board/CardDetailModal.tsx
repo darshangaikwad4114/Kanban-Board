@@ -8,7 +8,7 @@ import { ConfirmDialog } from '@/components/ui/ConfirmDialog';
 import { SelectField, TextField, TextareaField } from '@/components/ui/Field';
 import { Modal } from '@/components/ui/Modal';
 import { formatDueDate, formatRelativeTime } from '@/lib/dates';
-import { getLabelStyle, priorityStyles } from '@/lib/theme';
+import { getLabelStyle, priorityStyles } from '@/config/theme';
 import { cn } from '@/lib/utils';
 import type { CardPatchInput } from '@/lib/validation';
 import type { BoardList, BoardMember, Card, CardPriority } from '@/types/domain';

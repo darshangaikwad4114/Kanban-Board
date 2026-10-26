@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/Button';
 import { PasswordField } from '@/components/ui/Field';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { useToast } from '@/components/ui/Toast';
-import { useAuthStore } from '@/store/authStore';
+import { useAuthStore } from '@/stores/authStore';
 
 export function ResetPasswordForm() {
   const router = useRouter();

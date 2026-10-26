@@ -2,7 +2,7 @@
 
 import { Check } from 'lucide-react';
 import { BOARD_COLORS, type BoardColor } from '@/types/domain';
-import { boardColorStyles } from '@/lib/theme';
+import { boardColorStyles } from '@/config/theme';
 import { cn } from '@/lib/utils';
 
 interface ColorPickerProps {

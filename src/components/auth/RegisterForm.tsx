@@ -10,8 +10,8 @@ import { PasswordField, TextField } from '@/components/ui/Field';
 import { useToast } from '@/components/ui/Toast';
 import { SupabaseSetupNotice } from '@/components/layout/SupabaseSetupNotice';
 import { authPath } from '@/lib/navigation';
-import { useAuthStore } from '@/store/authStore';
-import { useRedirectIfAuthenticated } from './useRedirectIfAuthenticated';
+import { useAuthStore } from '@/stores/authStore';
+import { useRedirectIfAuthenticated } from '@/hooks/auth/useRedirectIfAuthenticated';
 
 export function RegisterForm() {
   const searchParams = useSearchParams();

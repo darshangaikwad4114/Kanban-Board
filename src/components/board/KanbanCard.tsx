@@ -3,7 +3,7 @@
 import type { DragEvent } from 'react';
 import { CalendarDays, GripVertical, MoreHorizontal, SquarePen, Trash2 } from 'lucide-react';
 import { formatDueDate } from '@/lib/dates';
-import { dueToneStyles, getLabelStyle, priorityStyles } from '@/lib/theme';
+import { dueToneStyles, getLabelStyle, priorityStyles } from '@/config/theme';
 import { cn } from '@/lib/utils';
 import type { Card } from '@/types/domain';
 import { Avatar } from '@/components/ui/Avatar';

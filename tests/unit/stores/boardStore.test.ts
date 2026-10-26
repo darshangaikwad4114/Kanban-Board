@@ -1,4 +1,4 @@
-import { useBoardStore } from '@/store/boardStore';
+import { useBoardStore } from '@/stores/boardStore';
 import * as boardsService from '@/services/boards.service';
 import * as cardsService from '@/services/cards.service';
 import * as listsService from '@/services/lists.service';

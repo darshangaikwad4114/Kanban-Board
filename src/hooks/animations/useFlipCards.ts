@@ -2,7 +2,7 @@
 
 import { useLayoutEffect, useRef, type RefObject } from 'react';
 import gsap from 'gsap';
-import { registerGsapPlugins, Flip } from '@/lib/gsap/registerPlugins';
+import { registerGsapPlugins, Flip } from '@/lib/gsap';
 import { useReducedMotion } from './useReducedMotion';
 
 registerGsapPlugins();

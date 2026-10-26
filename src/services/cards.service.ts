@@ -1,10 +1,10 @@
 import { ServiceError } from '@/lib/errors';
-import { mapCardRow } from '@/lib/mappers';
+import { mapCardRow } from '@/services/mappers';
 import { getSupabaseClient } from '@/lib/supabase/client';
 import { cardPatchSchema, cardTitleSchema, type CardPatchInput } from '@/lib/validation';
 import type { CardRow } from '@/types/database';
 import type { Card } from '@/types/domain';
-import { throwOnError, unwrap } from './helpers';
+import { throwOnError, unwrap } from '@/services/postgrest';
 
 export type CardFields = Omit<CardPatchInput, 'listId'>;
 

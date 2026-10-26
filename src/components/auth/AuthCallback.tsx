@@ -9,7 +9,7 @@ import { Alert } from '@/components/ui/Alert';
 import { toUserMessage } from '@/lib/errors';
 import { sanitizeNext } from '@/lib/navigation';
 import { completeAuthRedirect } from '@/services/auth.service';
-import { useAuthStore } from '@/store/authStore';
+import { useAuthStore } from '@/stores/authStore';
 
 export function AuthCallback() {
   const params = useSearchParams();

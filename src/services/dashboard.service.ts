@@ -1,9 +1,9 @@
-import { mapBoardRow, mapUpcomingCard } from '@/lib/mappers';
+import { mapBoardRow, mapUpcomingCard } from '@/services/mappers';
 import { getSupabaseClient } from '@/lib/supabase/client';
 import { toDateOnly } from '@/lib/dates';
 import type { BoardOverviewRow, MemberIdRow, UpcomingCardRow } from '@/types/database';
 import type { DashboardData, PortfolioStats } from '@/types/domain';
-import { throwOnError, unwrapList } from './helpers';
+import { throwOnError, unwrapList } from '@/services/postgrest';
 
 const PRIORITY_WEIGHT: Record<string, number> = {
   high: 3,

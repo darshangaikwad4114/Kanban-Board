@@ -98,7 +98,7 @@ async function main() {
   `);
 
   for (const file of MIGRATIONS) {
-    const sql = await readFile(new URL(`../supabase/migrations/${file}`, import.meta.url), 'utf8');
+    const sql = await readFile(new URL(`../../supabase/migrations/${file}`, import.meta.url), 'utf8');
     await db.exec(sql);
     ok(`migration applied: ${file}`);
   }
@@ -119,7 +119,7 @@ async function main() {
   await asPostgres(async () => {
     await db.query('delete from public.profiles where id = $1', [USERS.cleo]);
     const backfill = await readFile(
-      new URL('../supabase/migrations/20261026000500_backfill_profiles.sql', import.meta.url),
+      new URL('../../supabase/migrations/20261026000500_backfill_profiles.sql', import.meta.url),
       'utf8'
     );
     await db.exec(backfill);

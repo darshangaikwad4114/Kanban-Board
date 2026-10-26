@@ -3,7 +3,7 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { sanitizeNext } from '@/lib/navigation';
-import { useAuthStore } from '@/store/authStore';
+import { useAuthStore } from '@/stores/authStore';
 
 export function useRedirectIfAuthenticated(next?: string | null) {
   const router = useRouter();

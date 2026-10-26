@@ -2,7 +2,7 @@
 
 import { CalendarDays, CheckCircle2 } from 'lucide-react';
 import { formatDueDate } from '@/lib/dates';
-import { dueToneStyles, priorityStyles } from '@/lib/theme';
+import { dueToneStyles, priorityStyles } from '@/config/theme';
 import { cn } from '@/lib/utils';
 import type { UpcomingCard } from '@/types/domain';
 

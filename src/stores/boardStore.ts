@@ -8,11 +8,11 @@ import {
   mapBoardColor,
   mapCardRow,
   mapListRow,
-} from '@/lib/mappers';
+} from '@/services/mappers';
 import { applyListOrder, applyOptimisticMove, sortCards, sortLists } from '@/lib/reorder';
 import { getSupabaseClient } from '@/lib/supabase/client';
 import type { BoardUpdateInput, CardPatchInput } from '@/lib/validation';
-import { useAuthStore } from '@/store/authStore';
+import { useAuthStore } from '@/stores/authStore';
 import { logActivity } from '@/services/activity.service';
 import {
   fetchBoardSnapshot,

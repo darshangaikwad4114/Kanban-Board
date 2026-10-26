@@ -2,7 +2,7 @@
 
 import { useRef, type RefObject } from 'react';
 import { useGSAP } from '@gsap/react';
-import { registerGsapPlugins, gsap } from '@/lib/gsap/registerPlugins';
+import { registerGsapPlugins, gsap } from '@/lib/gsap';
 import { useReducedMotion } from './useReducedMotion';
 
 registerGsapPlugins();

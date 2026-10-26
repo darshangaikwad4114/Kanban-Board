@@ -1,7 +1,7 @@
 'use client';
 
 import { cn } from '@/lib/utils';
-import { getAvatarLabel, getAvatarStyle } from '@/lib/theme';
+import { getAvatarLabel, getAvatarStyle } from '@/config/theme';
 
 const sizeClasses = {
   xs: 'h-6 w-6 text-[10px]',

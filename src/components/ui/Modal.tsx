@@ -2,7 +2,7 @@
 
 import { useId, type ReactNode, type RefObject } from 'react';
 import { X } from 'lucide-react';
-import { useDialogA11y } from '@/hooks/useDialogA11y';
+import { useDialogA11y } from '@/hooks/ui/useDialogA11y';
 import { cn } from '@/lib/utils';
 import { Portal } from './Portal';
 

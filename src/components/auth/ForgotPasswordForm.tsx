@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/Button';
 import { TextField } from '@/components/ui/Field';
 import { useToast } from '@/components/ui/Toast';
 import { SupabaseSetupNotice } from '@/components/layout/SupabaseSetupNotice';
-import { useAuthStore } from '@/store/authStore';
+import { useAuthStore } from '@/stores/authStore';
 
 export function ForgotPasswordForm() {
   const requestPasswordReset = useAuthStore((state) => state.requestPasswordReset);

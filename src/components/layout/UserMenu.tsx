@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Loader2, LogOut, UserRound } from 'lucide-react';
-import { useAuthStore } from '@/store/authStore';
+import { useAuthStore } from '@/stores/authStore';
 import { Avatar } from '@/components/ui/Avatar';
 import { MenuDivider, MenuItem, Popover } from '@/components/ui/Popover';
 import { ProfileSettingsModal } from './ProfileSettingsModal';

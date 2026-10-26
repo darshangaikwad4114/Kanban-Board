@@ -7,7 +7,7 @@ import {
   Zap,
   type LucideIcon,
 } from 'lucide-react';
-import type { TemplateIcon as TemplateIconKey } from '@/lib/templates';
+import type { TemplateIcon as TemplateIconKey } from '@/config/templates';
 
 const icons: Record<TemplateIconKey, LucideIcon> = {
   blank: LayoutGrid,

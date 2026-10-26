@@ -7,7 +7,7 @@ import {
   mapMemberRow,
   mapPriority,
   mapUpcomingCard,
-} from '@/lib/mappers';
+} from '@/services/mappers';
 import type { BoardOverviewRow, CardRow } from '@/types/database';
 import type { User as SupabaseAuthUser } from '@supabase/supabase-js';
 

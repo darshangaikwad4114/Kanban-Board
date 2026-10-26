@@ -5,12 +5,12 @@ import type {
   User as SupabaseAuthUser,
 } from '@supabase/supabase-js';
 import { ServiceError } from '@/lib/errors';
-import { mapAuthUser } from '@/lib/mappers';
+import { mapAuthUser } from '@/services/mappers';
 import { getSupabaseClient } from '@/lib/supabase/client';
 import { getAppUrl } from '@/lib/supabase/env';
 import type { ProfileRow } from '@/types/database';
 import type { User } from '@/types/domain';
-import { throwOnError, unwrap } from './helpers';
+import { throwOnError, unwrap } from '@/services/postgrest';
 
 export interface SignUpResult {
   user: User | null;

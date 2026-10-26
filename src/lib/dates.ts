@@ -10,12 +10,6 @@ export function parseDateOnly(value: string): Date | null {
   return Number.isNaN(date.getTime()) ? null : date;
 }
 
-export function toDateInputValue(value: string | null | undefined): string {
-  if (!value) return '';
-  const match = DATE_ONLY.exec(value);
-  return match ? value : value.slice(0, 10);
-}
-
 export function formatRelativeTime(value: string): string {
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return '';
@@ -33,17 +27,6 @@ export function formatRelativeTime(value: string): string {
   if (diffDays < 7) return `${diffDays}d ago`;
 
   return date.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
-}
-
-export function formatDateTime(value: string): string {
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return '';
-  return date.toLocaleString(undefined, {
-    month: 'short',
-    day: 'numeric',
-    hour: 'numeric',
-    minute: '2-digit',
-  });
 }
 
 export function formatDueDate(
@@ -74,21 +57,6 @@ export function formatDueDate(
     tone: 'muted',
     isOverdue: false,
   };
-}
-
-export function isDueOverdue(value: string | null): boolean {
-  if (!value) return false;
-  const due = parseDateOnly(value);
-  if (!due) return false;
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  return due.getTime() < today.getTime();
-}
-
-export function addDays(date: Date, days: number): Date {
-  const next = new Date(date);
-  next.setDate(next.getDate() + days);
-  return next;
 }
 
 export function toDateOnly(date: Date): string {

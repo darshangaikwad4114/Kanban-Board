@@ -1,8 +1,8 @@
-import { mapActivityRow } from '@/lib/mappers';
+import { mapActivityRow } from '@/services/mappers';
 import { getSupabaseClient } from '@/lib/supabase/client';
 import type { ActivityLogRow } from '@/types/database';
 import type { ActivityLog, EntityType } from '@/types/domain';
-import { throwOnError, unwrapList } from './helpers';
+import { throwOnError, unwrapList } from '@/services/postgrest';
 
 export async function listActivity(boardId: string, limit = 50): Promise<ActivityLog[]> {
   const safeLimit = Math.min(Math.max(Math.trunc(limit), 1), 100);

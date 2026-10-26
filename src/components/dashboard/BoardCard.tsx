@@ -13,7 +13,7 @@ import {
   Users,
 } from 'lucide-react';
 import { formatRelativeTime } from '@/lib/dates';
-import { getBoardColorStyle } from '@/lib/theme';
+import { getBoardColorStyle } from '@/config/theme';
 import { cn } from '@/lib/utils';
 import type { Board, DashboardView } from '@/types/domain';
 import { MenuDivider, MenuItem, Popover } from '@/components/ui/Popover';

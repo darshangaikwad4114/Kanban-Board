@@ -1,10 +1,10 @@
 import { ServiceError } from '@/lib/errors';
-import { mapListRow } from '@/lib/mappers';
+import { mapListRow } from '@/services/mappers';
 import { getSupabaseClient } from '@/lib/supabase/client';
 import { listTitleSchema } from '@/lib/validation';
 import type { ListRow } from '@/types/database';
 import type { BoardList } from '@/types/domain';
-import { throwOnError, unwrap } from './helpers';
+import { throwOnError, unwrap } from '@/services/postgrest';
 
 export async function createList(boardId: string, rawTitle: string): Promise<BoardList> {
   const title = listTitleSchema.parse(rawTitle);

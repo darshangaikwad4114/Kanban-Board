@@ -1,5 +1,5 @@
 import type { Session } from '@supabase/supabase-js';
-import { useAuthStore } from '@/store/authStore';
+import { useAuthStore } from '@/stores/authStore';
 import * as authService from '@/services/auth.service';
 import { ServiceError } from '@/lib/errors';
 import type { User } from '@/types/domain';

@@ -28,7 +28,7 @@ import { deleteBoard, removeBoardMember, updateBoard } from '@/services/boards.s
 import { fetchDashboard } from '@/services/dashboard.service';
 import { toUserMessage } from '@/lib/errors';
 import { pluralize } from '@/lib/utils';
-import { useAuthStore } from '@/store/authStore';
+import { useAuthStore } from '@/stores/authStore';
 import type { BoardUpdateInput } from '@/lib/validation';
 import type {
   Board,

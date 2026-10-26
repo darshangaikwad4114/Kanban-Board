@@ -5,9 +5,9 @@ import {
   mapCardRow,
   mapListRow,
   mapMemberRow,
-} from '@/lib/mappers';
+} from '@/services/mappers';
 import { getSupabaseClient } from '@/lib/supabase/client';
-import { getTemplateById } from '@/lib/templates';
+import { getTemplateById } from '@/config/templates';
 import {
   boardSchema,
   boardUpdateSchema,
@@ -24,7 +24,7 @@ import type {
 } from '@/types/database';
 import type { Board, BoardMember, BoardSnapshot, InviteResult } from '@/types/domain';
 import { sortCards, sortLists } from '@/lib/reorder';
-import { throwOnError, unwrap, unwrapList } from './helpers';
+import { throwOnError, unwrap, unwrapList } from '@/services/postgrest';
 
 const MEMBER_SELECT = 'board_id, user_id, role, created_at, profiles (id, display_name)';
 

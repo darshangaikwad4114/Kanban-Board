@@ -1,7 +1,7 @@
 'use client';
 
-import { BOARD_TEMPLATES, templateCardCount } from '@/lib/templates';
-import { getBoardColorStyle } from '@/lib/theme';
+import { BOARD_TEMPLATES, templateCardCount } from '@/config/templates';
+import { getBoardColorStyle } from '@/config/theme';
 import { cn } from '@/lib/utils';
 import { TemplateGlyph } from '@/components/board/TemplateIcon';
 

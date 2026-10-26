@@ -52,12 +52,12 @@ import {
   type DragOverInfo,
   type DropEdge,
 } from '@/lib/reorder';
-import { connectionStyles, getBoardColorStyle } from '@/lib/theme';
+import { connectionStyles, getBoardColorStyle } from '@/config/theme';
 import { cn } from '@/lib/utils';
 import type { BoardUpdateInput, CardPatchInput } from '@/lib/validation';
 import { deleteBoard as deleteBoardService } from '@/services/boards.service';
-import { useAuthStore } from '@/store/authStore';
-import { useBoardStore } from '@/store/boardStore';
+import { useAuthStore } from '@/stores/authStore';
+import { useBoardStore } from '@/stores/boardStore';
 import type { BoardList, Card, CardPriority } from '@/types/domain';
 
 function BoardView() {

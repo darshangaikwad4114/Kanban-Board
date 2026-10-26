@@ -4,7 +4,7 @@ import { useEffect, type ReactNode } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { SupabaseSetupNotice } from '@/components/layout/SupabaseSetupNotice';
 import { PageSpinner } from '@/components/ui/Skeleton';
-import { useAuthStore } from '@/store/authStore';
+import { useAuthStore } from '@/stores/authStore';
 
 export function RequireAuth({ children }: { children: ReactNode }) {
   const router = useRouter();
