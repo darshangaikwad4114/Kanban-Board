@@ -10,14 +10,7 @@ dist/
 .DS_Store
 coverage/
 *.tsbuildinfo
+test-results/
 
-
-# Compiled output that should never live alongside TS sources
-packages/*/src/**/*.js
-packages/*/src/**/*.js.map
-packages/*/src/**/*.d.ts
-packages/*/src/**/*.d.ts.map
-packages/server/tests/**/*.js
-packages/server/tests/**/*.js.map
-packages/server/tests/**/*.d.ts
-packages/server/tests/**/*.d.ts.map
+# Supabase CLI local state
+supabase/.temp/
